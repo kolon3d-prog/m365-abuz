@@ -1,13 +1,27 @@
 # m365-native
 
+[![CI](https://github.com/kolon3d-prog/m365-abuz/actions/workflows/ci.yml/badge.svg)](https://github.com/kolon3d-prog/m365-abuz/actions/workflows/ci.yml)
+[![Go](https://img.shields.io/badge/Go-1.23%2B-00ADD8?logo=go&logoColor=white)](https://go.dev/dl/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](docker-compose.yml)
+
 M365 ChatHub gateway for **authorized Microsoft 365 Copilot sessions**. It exposes OpenAI-compatible and Anthropic-compatible HTTP APIs for chat, streaming, multimodal input, tool calls, session continuity, and upstream image-event parsing.
 
-> This project is an interoperability gateway, not an authentication bypass. You must use a Microsoft account and tenant you are authorized to use. Upstream model availability, quotas, tools, vision, and image generation depend on the account and Microsoft service.
+> **Scope & ethics.** This project is an interoperability gateway, **not** an authentication bypass. You must use a Microsoft account and tenant you are authorized to use. Upstream model availability, quotas, tools, vision, and image generation depend on the account and Microsoft service.
 
-## Reference repositories
+## Contents
 
-- **M365-Copilot2API:** <https://github.com/HEXUXIU/M365-Copilot2API>
-- **Microsoft 365 Copilot:** <https://www.microsoft.com/microsoft-365/copilot>
+- [Features](#features)
+- [Architecture](#architecture)
+- [Requirements](#requirements)
+- [Quick start: source build](#quick-start-source-build)
+- [Docker deployment (recommended)](#docker-deployment-recommended)
+- [API examples](#api-examples)
+- [Model routing](#model-routing)
+- [Configuration](#configuration)
+- [Development and verification](#development-and-verification)
+- [Security notes](#security-notes)
+- [License](#license)
 
 ## Features
 
@@ -21,17 +35,44 @@ M365 ChatHub gateway for **authorized Microsoft 365 Copilot sessions**. It expos
 - Upstream image-event/GraphicArt parsing when enabled for the account
 - Web console for account, API-key, settings, conversations, and debug management
 
+## Architecture
+
+```text
+   OpenAI / Anthropic client
+              |
+     HTTP (/v1/*, API key)
+              v
+   +-----------------------+
+   |     m365-native       |   protocol compat, tool loop,
+   |   (this gateway)      |   session mapping, image parsing
+   +-----------------------+
+              |
+     authorized WebSocket
+              v
+     Microsoft 365 ChatHub
+```
+
+| Package | Responsibility |
+|---|---|
+| `cmd/server` | Process entrypoint and wiring |
+| `internal/auth` | PKCE/device OAuth flow and token cache |
+| `internal/chathub` | Upstream ChatHub client, streaming, multimodal, tools |
+| `internal/outbound` | Outbound proxy pool and health checks |
+| `internal/web` | HTTP APIs, protocol compatibility, admin console |
+| `internal/config` | Configuration loading |
+| `internal/mcp` | MCP client/tool bridge |
+
 ## Requirements
 
-- Go 1.22+ for source builds, or Docker/Compose
+- Go 1.23+ for source builds, or Docker/Compose
 - An authorized Microsoft account and tenant
 - OAuth access obtained through the bundled PKCE flow or an existing account cache
 
 ## Quick start: source build
 
 ```bash
-git clone https://github.com/uefi2333/m365-native.git
-cd m365-native
+git clone https://github.com/kolon3d-prog/m365-abuz.git
+cd m365-abuz
 cp .env.example .env
 # Edit .env. Never commit real passwords or tokens.
 set -a; . ./.env; set +a
@@ -86,10 +127,10 @@ For a reverse proxy or LAN deployment, change the `ports` mapping deliberately a
 The Compose file mounts:
 
 ```text
-./data/accounts.json       OAuth account cache
-./data/token-cache.json    token cache
-./data/sessions.json       session_key mapping
-./data/api-keys.json       API-key hashes
+./data/accounts.json          OAuth account cache
+./data/token-cache.json       token cache
+./data/sessions.json          session_key mapping
+./data/api-keys.json          API-key hashes
 ./secrets/m365_admin_password administrator password secret
 ```
 
@@ -187,20 +228,25 @@ Common environment variables:
 ## Development and verification
 
 ```bash
-gofmt -w cmd internal
-go test ./...
+gofmt -l .        # must print nothing (CI enforces this)
 go vet ./...
+go test ./...
 go build ./...
 ```
+
+This repository ships a `.gitattributes` that normalizes line endings to LF, so
+`gofmt` stays consistent across Windows, macOS, and Linux checkouts.
 
 ## Security notes
 
 - Bind to localhost by default.
-- Change the administrator password immediately.
+- Change the administrator password immediately; never ship the example default.
 - Keep OAuth caches, token files, API-key files, and Docker secrets private.
 - Use TLS and an additional access-control layer before exposing the service outside localhost.
 - Do not log or publish access tokens, cookies, authorization headers, or raw authenticated WebSocket URLs.
 - This gateway only supports accounts and services you are authorized to access.
+
+See [SECURITY.md](SECURITY.md) for reporting and handling guidance.
 
 ## License
 
