@@ -1,0 +1,21 @@
+# Normalize line endings on commit; keep LF in the repo
+* text=auto eol=lf
+
+# Go sources must always use LF (gofmt / CI expects this)
+*.go text eol=lf
+*.mod text eol=lf
+*.sum text eol=lf
+
+# Shell and YAML scripts must stay LF for CI on Linux
+*.sh text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+Dockerfile text eol=lf
+
+# Treat common binary assets as binary (no EOL conversion)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.zip binary

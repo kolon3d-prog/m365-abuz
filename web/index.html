@@ -1,0 +1,633 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>M365 Native</title><style>
+:root {
+	color-scheme: light;
+	--bg: #f3f2f1; /* Fluent light gray background */
+	--surface: #ffffff; /* Stark white card surface */
+	--line: #e0e0e0; /* Clean light gray borders */
+	--text: #242424; /* Microsoft deep charcoal text */
+	--muted: #616161; /* Medium gray for secondary info */
+	--primary: #242424; /* Black primary buttons and dark details */
+	--primary-hover: #000000;
+	--accent-blue: #0f6cbd; /* Microsoft Fluent blue accent */
+	--green: #107c41; /* Excel green for success / online */
+	--red: #d13438; /* Warning red */
+	--sidebar: 250px;
+}
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+html, body {
+	max-width: 100%;
+}
+body {
+	background: var(--bg);
+	color: var(--text);
+	font-family: "Signifier", Georgia, "Times New Roman", serif;
+	font-size: 14px;
+	line-height: 1.4286;
+	-webkit-font-smoothing: antialiased;
+}
+.app {
+	display: flex;
+	min-height: 100vh;
+}
+.sidebar {
+	width: var(--sidebar);
+	background: #ffffff;
+	border-right: 1px solid var(--line);
+	padding: 24px 16px;
+	flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
+}
+.logo {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	font-size: 16px;
+	font-weight: 600;
+	padding: 0 8px 28px;
+	color: var(--text);
+}
+.logo-mark {
+	width: 24px;
+	height: 24px;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: repeat(2, 1fr);
+	gap: 2px;
+	padding: 2px;
+	box-sizing: border-box;
+	background: transparent;
+	border-radius: 0;
+	border: 0;
+	box-shadow: none;
+}
+.logo-mark span {
+	display: block;
+	min-width: 0;
+	min-height: 0;
+}
+.logo-mark span { display:block; border-radius:0; }
+.logo-mark span:nth-child(1) { background:#f25022; }
+.logo-mark span:nth-child(2) { background:#7fba00; }
+.logo-mark span:nth-child(3) { background:#00a4ef; }
+.logo-mark span:nth-child(4) { background:#ffb900; }
+.nav-label {
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	color: var(--muted);
+	padding: 0 12px;
+	margin: 16px 0 6px;
+	letter-spacing: 0.05em;
+}
+.nav {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.nav button {
+	width: 100%;
+	text-align: left;
+	background: transparent;
+	color: var(--text);
+	border: 0;
+	border-radius: 4px;
+	padding: 8px 12px;
+	cursor: pointer;
+	font: inherit;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	transition: background 0.1s ease, color 0.1s ease;
+}
+.nav button:hover {
+	background: #f3f2f1;
+}
+.nav button.active {
+	background: #edebe9;
+	font-weight: 600;
+	position: relative;
+}
+.nav button.active::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 8px;
+	bottom: 8px;
+	width: 3px;
+	background: var(--accent-blue);
+	border-radius: 0 2px 2px 0;
+}
+.sidebar-foot {
+	margin-top: auto;
+	color: var(--muted);
+	font-size: 11px;
+	padding: 12px 12px 0;
+	border-top: 1px solid var(--line);
+}
+.sidebar-foot span {
+	font-weight: 600;
+}
+.main {
+	flex: 1;
+	min-width: 0;
+	background: #faf9f8;
+	display: flex;
+	flex-direction: column;
+}
+.topbar {
+	height: 48px;
+	background: #ffffff;
+	border-bottom: 1px solid var(--line);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 32px;
+}
+.topbar h1 {
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--text);
+}
+.topbar-right {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	font-size: 13px;
+}
+.content {
+	max-width: 1200px;
+	padding: 32px;
+	flex: 1;
+}
+.page-head {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	margin-bottom: 24px;
+	border-bottom: 1px solid var(--line);
+	padding-bottom: 16px;
+}
+.page-head h2 {
+	font-size: 20px;
+	font-weight: 600;
+	margin-bottom: 4px;
+	color: var(--text);
+}
+.page-head p {
+	color: var(--muted);
+	font-size: 13px;
+}
+.btn {
+	border: 1px solid var(--line);
+	background: #ffffff;
+	color: var(--text);
+	border-radius: 2px;
+	padding: 6px 12px;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 600;
+	transition: background-color 0.1s, border-color 0.1s;
+}
+.btn:hover {
+	background-color: #f3f2f1;
+	border-color: #a19f9d;
+}
+.btn.primary {
+	background: var(--primary);
+	border-color: var(--primary);
+	color: #ffffff;
+}
+.btn.primary:hover {
+	background: var(--primary-hover);
+	border-color: var(--primary-hover);
+}
+.btn.danger {
+	color: var(--red);
+	border-color: var(--line);
+}
+.btn.danger:hover {
+	background-color: #fde7e9;
+	border-color: var(--red);
+}
+.stats {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 16px;
+	margin-bottom: 24px;
+}
+.stat {
+	background: var(--surface);
+	border: 1px solid var(--line);
+	padding: 16px;
+	box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,0.02), 0 0.3px 0.9px 0 rgba(0,0,0,0.01);
+}
+.stat-label {
+	color: var(--muted);
+	font-size: 12px;
+	font-weight: 600;
+}
+.stat-value {
+	display: block;
+	font-size: 24px;
+	font-weight: 300;
+	margin-top: 4px;
+	color: var(--text);
+}
+.panel {
+	background: var(--surface);
+	border: 1px solid var(--line);
+	box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,0.02), 0 0.3px 0.9px 0 rgba(0,0,0,0.01);
+}
+.panel-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px 20px;
+	border-bottom: 1px solid var(--line);
+}
+.panel-title {
+	font-size: 14px;
+	font-weight: 600;
+}
+.panel-sub {
+	font-size: 12px;
+	color: var(--muted);
+}
+.table-wrap {
+	overflow-x: auto;
+}
+.table {
+	width: 100%;
+	border-collapse: collapse;
+}
+.table th {
+	text-align: left;
+	color: var(--muted);
+	font-size: 12px;
+	font-weight: 600;
+	background: #fdfdfd;
+	border-bottom: 1px solid var(--line);
+}
+.table th, .table td {
+	padding: 12px 20px;
+	border-bottom: 1px solid var(--line);
+	white-space: nowrap;
+}
+.table tr:hover td {
+	background-color: #faf9f8;
+}
+.table tr:last-child td {
+	border-bottom: 0;
+}
+.account-cell {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+.avatar {
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	background: #edebe9;
+	color: var(--text);
+	display: grid;
+	place-items: center;
+	font-weight: 600;
+	font-size: 11px;
+	border: 1px solid var(--line);
+}
+.muted {
+	color: var(--muted);
+}
+.status {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--green);
+	font-size: 13px;
+	font-weight: 600;
+}
+.status i {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: currentColor;
+}
+.empty {
+	text-align: center;
+	padding: 48px 20px;
+	color: var(--muted);
+	background: #ffffff;
+}
+.form-panel {
+	max-width: 650px;
+	background: var(--surface);
+	border: 1px solid var(--line);
+	padding: 24px;
+	box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,0.02), 0 0.3px 0.9px 0 rgba(0,0,0,0.01);
+}
+.form-row {
+	margin-bottom: 20px;
+}
+.form-row label {
+	display: block;
+	font-size: 13px;
+	font-weight: 600;
+	margin-bottom: 6px;
+	color: var(--text);
+}
+.input {
+	width: 100%;
+	border: 1px solid #a19f9d;
+	border-radius: 2px;
+	padding: 7px 10px;
+	outline: 0;
+	font: inherit;
+	background: #ffffff;
+	transition: border-color 0.15s ease-in-out;
+}
+.input:focus {
+	border-color: var(--accent-blue);
+	box-shadow: 0 0 0 1px var(--accent-blue);
+}
+.help {
+	font-size: 12px;
+	color: var(--muted);
+	margin-top: 6px;
+}
+.actions {
+	display: flex;
+	gap: 8px;
+}
+.notice {
+	position: fixed;
+	right: 24px;
+	bottom: 24px;
+	background: #242424;
+	color: #ffffff;
+	padding: 12px 18px;
+	border-radius: 2px;
+	display: none;
+	box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+	font-weight: 600;
+	font-size: 13px;
+	z-index: 99;
+}
+.notice.show {
+	display: block;
+}
+.auth-box {
+	margin-top: 16px;
+	padding: 16px;
+	background: #faf9f8;
+	border: 1px solid var(--line);
+}
+.auth-box a {
+	color: var(--accent-blue);
+	text-decoration: none;
+}
+.auth-box a:hover {
+	text-decoration: underline;
+}
+.modal {
+	position: fixed;
+	inset: 0;
+	background: rgba(0,0,0,0.4);
+	display: none;
+	align-items: center;
+	justify-content: center;
+	z-index: 30;
+}
+.modal.open {
+	display: flex;
+}
+.modal-card {
+	width: min(500px, calc(100vw - 32px));
+	background: var(--surface);
+	border: 1px solid var(--line);
+	box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+	padding: 24px;
+}
+.modal-card h3 {
+	margin-bottom: 8px;
+	font-size: 16px;
+	font-weight: 600;
+}
+.key-output {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	margin: 16px 0;
+	padding: 10px;
+	background: #faf9f8;
+	border: 1px solid var(--line);
+}
+.key-output code {
+	flex: 1;
+	overflow: auto;
+	white-space: nowrap;
+	font-family: Consolas, "Courier New", Courier, monospace;
+	font-size: 13px;
+}
+.copy-btn {
+	white-space: nowrap;
+}
+@media(max-width:700px){
+	.sidebar {
+		width: 48px;
+		padding: 16px 4px;
+	}
+	.logo span, .nav-label, .nav button span, .sidebar-foot {
+		display: none;
+	}
+	.logo {
+		padding-bottom: 16px;
+		justify-content: center;
+	}
+	.nav button {
+		padding: 8px 0;
+		justify-content: center;
+	}
+	.topbar {
+		padding: 0 16px;
+	}
+	.content {
+		padding: 16px;
+	}
+	.stats {
+		grid-template-columns: 1fr;
+	}
+	.topbar-right {
+		display: none;
+	}
+}
+
+/* Precision polish: interaction, hierarchy, accessibility, and responsive details. */
+:focus-visible{outline:2px solid var(--accent-blue);outline-offset:2px}
+button,.input{min-height:32px}
+button:disabled{cursor:not-allowed;opacity:.55}
+::selection{background:#cfe4f7;color:#242424}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#f3f2f1}
+::-webkit-scrollbar-thumb{background:#c8c6c4;border:3px solid #f3f2f1;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:#a19f9d}
+.topbar-right #serviceStatus{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600}
+.topbar-right #serviceStatus::before{content:"";width:7px;height:7px;border-radius:50%;background:#107c41;box-shadow:0 0 0 3px #107c4120}
+.table td:first-child{color:#242424}
+.table td:last-child:not(:first-child){text-align:right}
+.table th:last-child{text-align:right}
+.table code,.help code,.key-output code{color:#404040;background:#f3f2f1;border:1px solid #edebe9;padding:2px 5px;border-radius:2px}
+.status{padding:3px 8px;border:1px solid #b7dfc9;background:#f1fbf5;border-radius:999px}
+.status i{width:6px;height:6px}
+.stat{position:relative;overflow:hidden}
+.stat::after{content:"";position:absolute;right:0;top:0;width:3px;height:100%;background:#0f6cbd;opacity:.7}
+.page-head .btn{flex-shrink:0}
+.panel,.form-panel,.stat{border-radius:4px}
+.btn,.input{transition:background-color .12s ease,border-color .12s ease,box-shadow .12s ease,transform .12s ease}
+.btn:active{transform:translateY(1px)}
+.empty{min-height:120px}
+.modal-card{border-radius:4px}
+.notice{border-left:3px solid #0f6cbd}
+@media(max-width:700px){
+ .content{padding:20px 14px;max-width:100%;overflow-x:hidden}
+ .page-head{gap:14px;align-items:flex-start}
+ .page-head .btn{white-space:nowrap}
+ .table-wrap{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+ .table{width:max-content;min-width:680px;table-layout:auto}
+ .table th,.table td{white-space:nowrap;vertical-align:middle}
+ .table th{height:42px}
+ .log-table{width:max-content;min-width:760px;table-layout:auto}
+ .log-table th,.log-table td{white-space:nowrap;word-break:normal;overflow-wrap:normal}
+ .table th,.table td{padding:11px 10px;min-width:0;overflow-wrap:anywhere;word-break:break-word}
+ .table th:first-child,.table td:first-child{width:64%}
+ .table th:nth-child(2),.table td:nth-child(2){width:22%}
+ .table th:nth-child(3),.table td:nth-child(3){display:none}
+ .table th:last-child,.table td:last-child{width:14%;padding-left:2px;padding-right:2px}
+ .account-cell{gap:8px;min-width:0}
+ .account-cell>div:last-child{min-width:0}
+ .account-cell b,.account-cell .muted{display:block;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .account-cell .muted{font-size:12px;margin-top:2px}
+ .table .btn{padding:6px 4px;font-size:11px;white-space:normal}
+ .form-panel{padding:18px}
+ .modal-card{padding:20px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
+/* Precision polish II: Fluent console density and state presentation. */
+.nav button{position:relative}
+.nav button:not(.active)::after{content:"";position:absolute;left:12px;right:12px;bottom:0;height:1px;background:transparent}
+.nav button:focus-visible{z-index:1}
+.page-head h2{letter-spacing:-.01em}
+.page-head p{max-width:680px}
+.form-panel .form-row:last-child{margin-bottom:0}
+#settingsForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:20px;row-gap:0}
+#modelMappingsSection{border-top:1px solid var(--line);padding-top:18px;margin-top:2px;margin-bottom:2px}.model-mapping-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.model-mapping-head label{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.model-mapping-list{display:grid;gap:8px}.model-mapping-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(120px,.7fr) 34px;gap:8px;align-items:end}.model-mapping-row label{display:grid;gap:5px;font-size:12px;color:var(--muted)}.model-mapping-remove{width:34px;height:34px;padding:0;font-size:16px;line-height:1}.model-mapping-help{margin:8px 0 0;color:var(--muted);font-size:12px;line-height:1.5}
+#settingsForm .form-row{min-width:0}
+#settingsForm .form-row:nth-child(1),#settingsForm .form-row:nth-child(7),#settingsForm .form-row:nth-child(13){grid-column:1/-1;border-top:1px solid var(--line);padding-top:18px;margin-top:2px}
+#settingsForm .form-row:nth-child(1)::before{content:"Маршрутизация инструментов";display:block;color:var(--text);font-size:12px;font-weight:700;letter-spacing:.04em;margin-bottom:14px;text-transform:uppercase}
+#settingsForm .form-row:nth-child(7)::before{content:"Перезапуск и работа";display:block;color:var(--text);font-size:12px;font-weight:700;letter-spacing:.04em;margin-bottom:14px;text-transform:uppercase}
+#settingsForm .form-row:nth-child(13)::before{content:"OAuth";display:block;color:var(--text);font-size:12px;font-weight:700;letter-spacing:.04em;margin-bottom:14px;text-transform:uppercase}
+#settingsForm .setting-input{background:#fff}
+#settingsForm + .help{padding:12px 14px;background:#f8f8f8;border-left:3px solid #0f6cbd}
+.auth-box:empty{display:none}
+.empty{font-size:13px}
+.empty::before{content:"○";display:block;color:#a19f9d;font-size:28px;line-height:1;margin-bottom:10px}
+.modal-card .actions{margin-top:18px}
+#keyCreated{border-top:1px solid var(--line);margin-top:20px;padding-top:2px}
+#login{background:rgba(255,255,255,.96)!important}
+#login .form-panel{box-shadow:0 12px 32px rgba(0,0,0,.08);border-top:3px solid #242424}
+#login .logo{border-bottom:1px solid var(--line);margin-bottom:22px}
+@media(max-width:760px){#settingsForm{grid-template-columns:1fr}#settingsForm .form-row:nth-child(1),#settingsForm .form-row:nth-child(7),#settingsForm .form-row:nth-child(10){grid-column:auto}}
+@media(max-width:760px){.model-mapping-row{grid-template-columns:1fr}.model-mapping-remove{width:100%}}
+
+.log-filter{width:auto;min-width:120px}
+.log-table td{vertical-align:middle}
+.log-level{display:inline-flex;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:700;text-transform:uppercase}
+.log-info{color:#0f6cbd;background:#e8f3fb;border:1px solid #b7d7ed}
+.log-warn{color:#8a4b08;background:#fff4ce;border:1px solid #f1d27a}
+.log-error{color:#a4262c;background:#fde7e9;border:1px solid #efb5b8}
+.deploy-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}.deploy-field{display:grid;gap:6px}.deploy-field>label{font-size:12px;font-weight:700;color:var(--text)}.deploy-field .help{font-size:11px;min-height:32px}.deploy-submit{align-self:end;min-height:38px}@media(max-width:760px){.deploy-fields{grid-template-columns:1fr;gap:16px}.deploy-field .help{min-height:0}.deploy-submit{width:100%;margin-top:2px}.page-deploy .form-panel{padding:16px}}
+
+/* Share edition: dark interface and system sans typography. */
+:root{
+  color-scheme:dark;
+  --bg:#191919;
+  --surface:#202020;
+  --line:rgba(255,255,255,.16);
+  --text:#ffffff;
+  --muted:rgba(255,255,255,.65);
+  --primary:#5e9fe8;
+  --primary-hover:#78b0f0;
+  --accent-blue:#5e9fe8;
+  --green:#72bc8f;
+  --red:#e97366;
+}
+body{background:var(--bg);font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;font-size:15px;line-height:1.5}
+.sidebar,.topbar{background:#202020}.main{background:#191919}.nav button{color:var(--text)}
+.nav button:hover,.btn:hover{background:#383836}.nav button.active{background:rgba(94,159,232,.16)}
+.topbar,.sidebar,.panel,.form-panel,.stat,.table th,.table td,.panel-head{border-color:var(--line)}
+.panel,.form-panel,.stat{background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.28),0 6px 18px rgba(0,0,0,.18)}
+.table th{background:#242424}.table tr:hover td,.auth-box,.key-output{background:#282828}
+.input{background:#191919;color:var(--text);border-color:rgba(255,255,255,.24)}
+.input:focus{border-color:var(--accent-blue);box-shadow:0 0 0 2px rgba(94,159,232,.25)}
+.btn{background:#2a2a2a;color:var(--text);border-color:rgba(255,255,255,.20)}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:#101828}.btn.primary:hover{background:var(--primary-hover);border-color:var(--primary-hover)}
+.btn.danger{color:#ff9b91}.btn.danger:hover{background:rgba(233,115,102,.15);border-color:#e97366}
+.table code,.help code,.key-output code{background:#2d2d2d;color:#f5f5f5;border-color:rgba(255,255,255,.14)}
+.empty{background:#202020}.notice{background:#303030;border-left-color:var(--accent-blue)}
+.status{background:rgba(114,188,143,.12);border-color:rgba(114,188,143,.45);color:#8ed5a8}
+::selection{background:rgba(94,159,232,.45);color:#fff}
+</style></head><body><div id="login" hidden></div><div class="app" id="app"><aside class="sidebar"><div class="logo"><div class="logo-mark" aria-label="Microsoft"><span></span><span></span><span></span><span></span></div><span>M365 Native</span></div><div class="nav-label">Управление</div><div class="nav"><button class="active" data-page="pool" onclick="showPage('pool')">◉ <span>Пул аккаунтов</span></button><button data-page="add" onclick="showPage('add')">＋ <span>Добавить аккаунт</span></button><button data-page="keys" onclick="showPage('keys')">▣ <span>Настройки доступа</span></button><button data-page="logs" onclick="showPage('logs')">≡ <span>Журнал работы</span></button><button data-page="proxy" onclick="showPage('proxy')">⇄ <span>Пул прокси</span></button><button data-page="deploy" onclick="showPage('deploy')">◆ <span>Развёртывание пула прокси</span></button></div><div class="nav-label">Система</div><div class="nav"><button data-page="settings" onclick="showPage('settings')">⚙ <span>Настройки</span></button></div><div class="sidebar-foot">M365 Native<br><span>v0.1.0</span></div></aside><main class="main"><header class="topbar"><h1 id="topTitle">Пул аккаунтов</h1><div class="topbar-right"><span id="serviceStatus">Проверка…</span><span id="runtimeVersion" class="muted">Загрузка версии…</span><button class="btn" onclick="loadAccounts()">Обновить</button><button class="btn" onclick="checkUpdate()">Проверить обновления</button></div></header><div class="content"><section id="page-pool"><div class="page-head"><div><h2>Пул аккаунтов</h2><p>Управление авторизованными аккаунтами Microsoft.</p></div><button class="btn primary" onclick="showPage('add')">Добавить аккаунт</button></div><div class="stats"><div class="stat"><span class="stat-label">Всего аккаунтов</span><b class="stat-value" id="total">—</b></div><div class="stat"><span class="stat-label">Активные аккаунты</span><b class="stat-value" id="online">—</b></div><div class="stat"><span class="stat-label">Статус сервиса</span><b class="stat-value" id="health">—</b></div></div><div class="panel"><div class="panel-head"><span class="panel-title">Список аккаунтов</span><span class="panel-sub" id="lastUpdate"></span></div><div class="table-wrap"><table class="table"><thead><tr><th>Аккаунт</th><th>Статус</th><th>Обновлено</th><th></th></tr></thead><tbody id="accountRows"><tr><td colspan="6" class="empty">Загрузка…</td></tr></tbody></table></div></div></section><section id="page-add" style="display:none"><div class="page-head"><div><h2>Добавить аккаунт</h2><p>Выберите способ авторизации Microsoft OAuth.</p></div></div><div class="form-panel"><div class="form-row"><label>Авторизация в браузере (PKCE)</label><div class="help">Откроется вход Microsoft. После входа страница автоматически получит результат авторизации — копировать адрес перенаправления не нужно.</div><button class="btn primary" style="margin-top:10px" onclick="startPKCE()">Создать и открыть страницу авторизации</button></div><div class="form-row"><label>Адрес перенаправления / код авторизации</label><input class="input" id="callbackInput" placeholder="Вставьте полный адрес перенаправления или введите code=...&state=..."><div class="help">Адрес перенаправления обычно содержит параметры <code>code</code> и <code>state</code>.</div><button class="btn" style="margin-top:10px" onclick="submitCallback()">Отправить адрес и добавить аккаунт</button></div><div id="authBox"></div></div></section><section id="page-keys" style="display:none"><div class="page-head"><div><h2>Настройки доступа</h2><p>Централизованное управление API-ключами, адресами API и правами доступа.</p></div><button class="btn primary" onclick="openKeyModal()">Создать API-ключ</button></div><div class="panel"><div class="panel-head"><span class="panel-title">API Keys</span><span class="panel-sub">Полный ключ показывается только при создании</span></div><div class="table-wrap"><table class="table"><thead><tr><th>Название</th><th>Префикс</th><th>Создан</th><th>Последнее использование</th><th>Статус</th><th></th></tr></thead><tbody id="keyRows"><tr><td colspan="6" class="empty">Загрузка…</td></tr></tbody></table></div></div><div class="form-panel" style="margin-top:16px"><div class="form-row"><label>Способ вызова</label><div class="help"><code>Authorization: Bearer m365_...</code> или <code>X-API-Key: m365_...</code></div></div><div class="form-row"><label>OpenAI Base URL</label><input class="input" id="baseUrl2" readonly></div><div class="actions"><button class="btn danger" onclick="logout()">Выйти</button></div></div></section><section id="page-logs" style="display:none"><div class="page-head"><div><h2>Журнал работы</h2><p>Просмотр API-запросов, статусов ответов и времени выполнения. Содержимое журнала зависит от выбранного уровня логирования.</p></div><div class="actions"><select id="logLevelFilter" class="input log-filter" onchange="loadLogs()"><option value="">Все уровни</option><option value="error">Ошибка</option><option value="warn">Предупреждение</option><option value="info">Информация</option></select><button class="btn" onclick="loadLogs()">Обновить журнал</button></div></div><div class="panel"><div class="panel-head"><span class="panel-title">Записи запросов</span><span class="panel-sub" id="logSummary"></span></div><div class="table-wrap"><table class="table log-table"><thead><tr><th>Уровень</th><th>Время</th><th>Запрос</th><th>Статус</th><th>Длительность</th><th>ID запроса</th></tr></thead><tbody id="logRows"><tr><td colspan="6" class="empty">Загрузка…</td></tr></tbody></table></div></div></section><section id="page-proxy" style="display:none"><div class="page-head"><div><h2>Пул прокси</h2><p>Управление исходящими прокси: ротация, охлаждение после ошибок и переключение во время работы.</p></div><div class="actions"><button class="btn" onclick="checkProxyPool()">Проверить все</button><button class="btn danger" onclick="clearProxyPoolPage()">Очистить пул прокси</button></div></div><div class="stats"><div class="stat"><span class="stat-label">Количество прокси</span><b class="stat-value" id="proxyTotal">—</b></div><div class="stat"><span class="stat-label">Охлаждение</span><b class="stat-value" id="proxyCooling">—</b></div><div class="stat"><span class="stat-label">Стратегия</span><b class="stat-value">Ротация</b></div></div><div class="form-panel"><div class="form-row"><label>Добавить один прокси</label><div class="actions"><input class="input" id="proxySingleInput" placeholder="socks5://user:pass@host:1080" style="flex:1"><button class="btn primary" onclick="addProxySinglePage()">Добавить</button></div></div><div class="form-row"><label>Добавить прокси списком</label><textarea class="input" id="proxyBatchInput" rows="5" placeholder="По одному в строке; также поддерживается разделение запятыми"></textarea><button class="btn primary" style="margin-top:10px" onclick="addProxyBatchPage()">Добавить списком</button></div></div><div class="panel" style="margin-top:16px"><div class="panel-head"><span class="panel-title">Статус прокси</span><span class="panel-sub">Неисправные прокси автоматически переводятся в режим охлаждения</span></div><div class="table-wrap"><table class="table"><thead><tr><th>Адрес прокси</th><th>Статус</th><th>Задержка</th><th>Ошибок</th><th>Охлаждение до</th><th></th></tr></thead><tbody id="proxyRows"><tr><td colspan="4" class="empty">Загрузка…</td></tr></tbody></table></div></div></section><section id="page-deploy" style="display:none"><div class="page-head"><div><h2>Развёртывание пула прокси</h2><p>Развёртывание узлов Cloudflare Worker с приоритетом пользовательского домена.</p></div><button class="btn" onclick="loadDeployments()">Обновить</button></div><div class="form-panel"><div class="form-row"><label>Развёртывание через Cloudflare API Token</label><div class="help">Используйте API Token для развёртывания Worker.Токен используется только для этого запроса и не сохраняется в данных узла или журналах.</div><div class="deploy-fields"><div class="deploy-field"><label for="cfAccount">ID аккаунта</label><div class="help">Cloudflare Идентификатор аккаунта в правой части панели Cloudflare.</div><input class="input" id="cfAccount" autocomplete="off" placeholder="Например: a1b2c3d4…"></div><div class="deploy-field"><label for="cfName">Название Worker</label><div class="help">Используйте только буквы, цифры, дефисы и подчёркивания.</div><input class="input" id="cfName" autocomplete="off" placeholder="Например: m365-relay"></div><div class="deploy-field"><label for="cfToken">API Token</label><div class="help">Требуются права редактирования Workers Scripts.</div><input class="input" id="cfToken" type="password" autocomplete="new-password" placeholder="Вставьте Cloudflare API Token"></div><button class="btn primary deploy-submit" onclick="deployCloudflarePage()">Развернуть Worker</button></div></div></div><div class="panel" style="margin-top:16px"><div class="panel-head"><span class="panel-title">Развёрнутые узлы</span><span class="panel-sub">Стандартный домен может быть нестабильным; рекомендуется сразу настроить пользовательский домен.</span></div><div class="table-wrap"><table class="table"><thead><tr><th>Узел</th><th>Публичный адрес</th><th>Статус</th><th>Задержка</th><th>Пользовательский домен</th><th>Действия</th></tr></thead><tbody id="deploymentRows"><tr><td colspan="6" class="empty">Загрузка…</td></tr></tbody></table></div></div></section><section id="page-settings" style="display:none"><div class="page-head"><div><h2>Настройки</h2><p>Маршрутизация инструментов、Ограничения моделей и параметры работы сервиса.</p></div><button class="btn primary" onclick="saveSettings()">Сохранить настройки</button></div><div class="form-panel"><div class="form-row"><label>Адрес API</label><input class="input" id="baseUrl" readonly></div><div id="settingsForm"></div><div class="help" style="margin-top:14px">Настройки с пометкой «требуется перезапуск» сохраняются, но применяются после перезапуска сервиса. Секретные ключи здесь не показываются в открытом виде.</div></div></section></div></main></div><div id="keyModal" class="modal" onclick="if(event.target===this)closeKeyModal()"><div class="modal-card"><h3>Создать API-ключ</h3><p class="muted">Задайте понятное имя для этого ключа. Полное значение ключа показывается только один раз.</p><form onsubmit="createKey(event)"><div class="form-row"><label>Название</label><input class="input" id="newKeyName" value="default" autocomplete="off" autofocus></div><div class="actions"><button type="button" class="btn" onclick="closeKeyModal()">Отмена</button><button class="btn primary">Создать и скопировать</button></div></form><div id="keyCreated" style="display:none"><div class="key-output"><code id="newKeyValue"></code><button class="btn copy-btn" onclick="copyCreatedKey()">Копировать</button></div><div class="help">Ключ скопирован в системный буфер обмена. Сохраните его в менеджере паролей.</div><div class="actions" style="margin-top:16px"><button class="btn primary" onclick="closeKeyModal()">Готово</button></div></div></div></div><div id="notice" class="notice"></div><script>
+const $=x=>document.getElementById(x);let timer;const titles={pool:'Пул аккаунтов',add:'Добавить аккаунт',keys:'Настройки доступа',logs:'Журнал работы',proxy:'Пул прокси',deploy:'Развёртывание пула прокси',settings:'Настройки'};function note(x){$('notice').textContent=x;$('notice').classList.add('show');clearTimeout(timer);timer=setTimeout(()=>$('notice').classList.remove('show'),3500)}function headers(){return {'Content-Type':'application/json'}}async function api(u,o={}){o.headers={...headers(),...(o.headers||{})};const r=await fetch(u,o);let d={};const raw=await r.text();try{d=raw?JSON.parse(raw):{}}catch{d={error:{message:raw}}}if(!r.ok)throw Error(d?.error?.message||raw||`Ошибка запроса (${r.status})`);return d}async function logout(){await fetch('/api/admin/logout',{method:'POST',credentials:'same-origin'});location.reload()}
+async function checkSession(){loadAccounts();showPage(sessionStorage.getItem('m365.currentPage')||'pool')}
+async function loadKeys(){try{const d=await api('/api/admin/keys');const activeKeys=(d.keys||[]).filter(k=>!k.revoked);$('keyRows').innerHTML=activeKeys.map(k=>`<tr data-key-id=\"${esc(k.id)}\"><td><b>${esc(k.name)}</b></td><td><code>${esc(k.prefix)}…</code></td><td class="muted">${new Date(k.createdAt).toLocaleString()}</td><td class="muted">${k.lastUsedAt?new Date(k.lastUsedAt).toLocaleString():'Не использовался'}</td><td>${k.revoked?'Отозван':'Активен'}</td><td>${k.revoked?'':'<button class="btn danger" onclick="revokeKey(\''+k.id+'\')">Отозвать</button>'}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">API-ключей пока нет</td></tr>'}catch(e){note(e.message)}}function openKeyModal(){$('keyModal').classList.add('open');$('keyCreated').style.display='none';$('newKeyName').value='default';setTimeout(()=>$('newKeyName').focus(),50)}function closeKeyModal(){$('keyModal').classList.remove('open')}async function copyText(text){try{await navigator.clipboard.writeText(text);note('API-ключ скопирован в буфер обмена');return true}catch(e){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();if(ok)note('API-ключ скопирован в буфер обмена');return ok}}async function createKey(e){e.preventDefault();const name=$('newKeyName').value.trim()||'default';try{const d=await api('/api/admin/keys',{method:'POST',body:JSON.stringify({name})});$('newKeyValue').textContent=d.key;$('keyCreated').style.display='block';await copyText(d.key);loadKeys()}catch(e){note(e.message)}}async function copyCreatedKey(){await copyText($('newKeyValue').textContent)}async function revokeKey(id){if(!confirm('Отозвать этот API-ключ?'))return;try{await api('/api/admin/keys?id='+encodeURIComponent(id),{method:'DELETE'});const row=document.querySelector('[data-key-id=\"'+CSS.escape(id)+'\"]');if(row)row.remove();loadKeys()}catch(e){note(e.message)}}
+function showPage(p){sessionStorage.setItem('m365.currentPage',p);if(p==='keys')loadKeys();if(p==='logs')loadLogs();if(p==='proxy')loadProxyPool();if(p==='deploy')loadDeployments();if(p==='settings')loadSettings();['pool','add','keys','logs','proxy','deploy','settings'].forEach(x=>{ $('page-'+x).style.display=x===p?'block':'none';document.querySelector(`[data-page="${x}"]`).classList.toggle('active',x===p)});$('topTitle').textContent=titles[p]}
+async function refreshAccount(id,button){if(!confirm('Обновить токен этого аккаунта сейчас?'))return;const old=button.textContent;button.disabled=true;button.textContent='Обновление…';try{const d=await api('/api/accounts/refresh',{method:'POST',body:JSON.stringify({id})});note('Токен обновлён. Действует до '+new Date(d.account.expiresAt).toLocaleString());await loadAccounts()}catch(e){note('Не удалось обновить токен: '+e.message)}finally{button.disabled=false;button.textContent=old}}async function deleteAccount(id,button){if(!confirm('Удалить этот аккаунт из пула? Его локальные токены также будут удалены.'))return;const old=button.textContent;button.disabled=true;button.textContent='Удаление…';try{await api('/api/accounts/delete',{method:'POST',body:JSON.stringify({id})});note('Аккаунт удалён из пула');await loadAccounts()}catch(e){note('Не удалось удалить аккаунт: '+e.message)}finally{button.disabled=false;button.textContent=old}}async function loadVersion(){try{const d=await api('/api/version');$('runtimeVersion').textContent='v'+d.version+' · '+d.commit;return d}catch(e){$('runtimeVersion').textContent='Версия неизвестна'}}async function checkUpdate(){try{const d=await api('/api/update');if(d.channel!=='stable'){note('Установлена версия для разработки; обновление не рекомендуется');return}note(d.updateAvailable?'Доступна новая стабильная версия: '+d.latest:d.message||'Установлена последняя стабильная версия')}catch(e){note(e.message)}}async function loadAccounts(){try{const d=await api('/api/accounts'),a=d.accounts||[];$('total').textContent=a.length;$('online').textContent=a.filter(x=>x.status==='online').length;$('accountRows').innerHTML=a.length?a.map(x=>`<tr><td><div class="account-cell"><div class="avatar">${(x.displayName||x.email||'M')[0].toUpperCase()}</div><div><b>${esc(x.displayName||x.email||x.id)}</b><div class="muted" title="${esc(x.email||'')}">${esc(x.email||'')}</div></div></div></td><td><span class="status"><i></i>${x.status==='online'?'В сети':'Не в сети'}</span></td><td class="muted">${x.updatedAt?new Date(x.updatedAt).toLocaleString():'—'}</td><td><button class="btn" onclick="refreshAccount('${esc(x.id)}',this)">Обновить токен</button> <button class="btn danger" onclick="deleteAccount('${esc(x.id)}',this)">Удалить</button></td></tr>`).join(''):'<tr><td colspan="4" class="empty">Аккаунтов пока нет. Нажмите «Добавить аккаунт», чтобы начать.</td></tr>';$('lastUpdate').textContent='Только что обновлено';$('serviceStatus').textContent='Сервис работает';try{await api('/api/health');$('health').textContent='Нормально'}catch{$('health').textContent='Ожидает проверки'}}catch(e){$('accountRows').innerHTML='<tr><td colspan="4" class="empty">'+e.message+'</td></tr>';$('serviceStatus').textContent='Требуется настройка';$('health').textContent='—'}}async function startPKCE(){try{const d=await api('/api/auth/start');if(d.url){window.addEventListener('message',function onAuth(e){if(e.origin!==location.origin||e.data?.type!=='m365-auth-complete')return;window.removeEventListener('message',onAuth);note('Авторизация выполнена: аккаунт автоматически добавлен в пул.');loadAccounts();showPage('pool')},{once:true});const popup=window.open(d.url,'m365-auth','popup,width=620,height=760');if(!popup){window.location.href=d.url}else{$('callbackInput').dataset.state=d.state;$('callbackInput').placeholder=d.redirectUri?.includes('/api/auth/callback')?'После авторизации окно закроется автоматически; вставлять адрес не нужно':'После входа вставьте полный адрес перенаправления (state сохранён автоматически)';note(d.redirectUri?.includes('/api/auth/callback')?'Страница авторизации открыта; после завершения входа возврат выполнится автоматически':'Страница авторизации открыта. После завершения вставьте адрес перенаправления.')} } else { note('Не удалось создать ссылку авторизации') }}catch(e){note(e.message)}}async function submitCallback(){const raw=$('callbackInput').value.trim();if(!raw)return note('Вставьте адрес перенаправления или код авторизации');try{let u='/api/auth/callback?';if(raw.includes('://')){u+='url='+encodeURIComponent(raw);if(!/[?&]state=/.test(raw)&&$('callbackInput').dataset.state)u+='&state='+encodeURIComponent($('callbackInput').dataset.state)}else{const q=(raw.includes('?')?raw.slice(raw.indexOf('?')+1):raw.replace(/^\?/,''));u+=q;if(!q.includes('state=')&&$('callbackInput').dataset.state)u+='&state='+encodeURIComponent($('callbackInput').dataset.state)}const d=await api(u);note('Авторизация выполнена: аккаунт добавлен в пул.');$('callbackInput').value='';loadAccounts();showPage('pool')}catch(e){note(e.message)}}function esc(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}const openAIBaseUrl=location.origin.replace(/\/$/,'')+'/v1';$('baseUrl').value=openAIBaseUrl;$('baseUrl2').value=openAIBaseUrl;loadVersion();checkSession();
+
+async function loadLogs(){try{const d=await api('/api/admin/debug/logs');const filter=$('logLevelFilter').value;const rows=(d.records||[]).filter(x=>!filter||x.level===filter);$('logSummary').textContent=`${rows.length}  записей`;$('logRows').innerHTML=rows.map(x=>`<tr><td><span class="log-level log-${esc(x.level||'info')}">${esc(x.level||'info')}</span></td><td class="muted">${new Date(x.at).toLocaleString()}</td><td><code>${esc(x.method)} ${esc(x.path)}</code></td><td>${esc(x.status)}</td><td>${esc(x.durationMs)} ms</td><td><code>${esc(x.id)}</code></td></tr>`).join('')||'<tr><td colspan="6" class="empty">Записей журнала пока нет</td></tr>'}catch(e){note(e.message)}}
+let pkcePollTimer=null,pkcePollState='';
+function stopPKCEPolling(){if(pkcePollTimer){clearInterval(pkcePollTimer);pkcePollTimer=null}pkcePollState=''}
+function isLoopbackCallback(uri){try{const u=new URL(uri);return (u.hostname==='127.0.0.1'||u.hostname==='localhost')&&u.pathname==='/api/auth/callback'}catch{return false}}
+async function startPKCE(){
+  stopPKCEPolling();
+  try{
+    const d=await api('/api/auth/start');
+    pkcePollState=d.state;
+    $('callbackInput').dataset.state=d.state;
+    const win=window.open(d.url,'m365-pkce-auth','width=600,height=800');
+    if(!win){note('Браузер заблокировал окно авторизации. Разрешите всплывающие окна и повторите попытку.');return}
+    if(!isLoopbackCallback(d.redirectUri)){
+      $('callbackInput').placeholder='После входа вставьте полный адрес перенаправления (state сохранён автоматически)';
+      $('authBox').innerHTML='<div class="help">После входа Вставьте ниже полный адрес, на который браузер перенаправил вас после входа, и отправьте его.</div>';
+      note('Страница авторизации открыта. После входа вставьте адрес перенаправления.');
+      return;
+    }
+    $('authBox').innerHTML='<div class="help">Окно авторизации открыто; ожидается завершение входа…</div>';
+    let started=Date.now();
+    pkcePollTimer=setInterval(async()=>{
+      if(Date.now()-started>10*60*1000){stopPKCEPolling();$('authBox').textContent='Время авторизации истекло. Создайте новую ссылку авторизации.';return}
+      try{
+        const st=await api('/api/auth/status?state='+encodeURIComponent(pkcePollState));
+        if(st.status==='authenticated'){
+          stopPKCEPolling();$('authBox').textContent='Авторизация выполнена: аккаунт добавлен в пул.';note('Авторизация аккаунта Microsoft успешно завершена');await loadAccounts();showPage('pool');return
+        }
+        if(st.status==='error'||st.status==='expired'){stopPKCEPolling();$('authBox').textContent='Ошибка авторизации: '+(st.error||'Срок авторизации истёк');note('Ошибка PKCE-авторизации');}
+      }catch(e){/* transient polling errors are retried */}
+    },2000);
+  }catch(e){note('Не удалось создать ссылку авторизации: '+e.message)}
+}
+async function checkProxyPool(){try{const d=await api('/api/admin/proxy-pool?action=check',{method:'PUT'});note('Проверка прокси завершена');renderProxyPool(d.proxies||[])}catch(e){note(e.message)}}function renderProxyPool(a){$('proxyTotal').textContent=a.length;$('proxyCooling').textContent=a.filter(x=>x.cooldownUntil&&new Date(x.cooldownUntil)>new Date()).length;$('proxyRows').innerHTML=a.map(x=>`<tr><td><code>${esc(x.url)}</code></td><td>${x.health==='reachable'?'Прокси доступен':(x.health==='upstream_error'?'Прокси доступен (ошибка вышестоящего сервиса)':(x.health==='unreachable'?'Недоступен':(x.cooldownUntil&&new Date(x.cooldownUntil)>new Date()?'Охлаждение':'Не проверен')))}</td><td>${x.latencyMs?x.latencyMs+' ms':'—'}</td><td>${x.failures||0}</td><td class="muted">${x.cooldownUntil&&new Date(x.cooldownUntil)>new Date()?new Date(x.cooldownUntil).toLocaleString():'—'}</td><td><button class="btn danger" onclick="removeProxyPage(${JSON.stringify(x.url)})">Удалить</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">Прокси пока нет</td></tr>'}async function loadDeployments(){try{const d=await api('/api/admin/deployments');const a=d.items||[];$('deploymentRows').innerHTML=a.map(x=>`<tr><td><b>${esc(x.name)}</b><div class="muted">${esc(x.provider)}</div></td><td><a href="${esc(x.activeUrl||x.defaultUrl)}" target="_blank" rel="noreferrer">${esc(x.activeUrl||x.defaultUrl)}</a></td><td>${esc(x.status||'Не проверен')}</td><td>${x.latencyMs?x.latencyMs+' ms':'—'}</td><td><input class="input" value="${esc(x.customUrl||'')}" placeholder="https://proxy.example.com" id="domain-${esc(x.id)}"></td><td><button class="btn" onclick="saveDeploymentDomain('${esc(x.id)}')">Сохранить домен</button> <button class="btn" onclick="checkDeployment('${esc(x.id)}')">Проверить и добавить в пул</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">Развёрнутых узлов пока нет</td></tr>'}catch(e){note(e.message)}}async function deployCloudflarePage(){const body={provider:'cloudflare',accountId:$('cfAccount').value.trim(),name:$('cfName').value.trim(),token:$('cfToken').value};if(!body.accountId||!body.name||!body.token)return note('Заполните ID аккаунта, название Worker и API Token');try{await api('/api/admin/deployments',{method:'POST',body:JSON.stringify(body)});$('cfToken').value='';note('Worker развёрнут. Настройте пользовательский домен и выполните проверку.');loadDeployments()}catch(e){note(e.message)}}async function saveDeploymentDomain(id){const v=$('domain-'+id).value.trim();try{await api('/api/admin/deployment?id='+encodeURIComponent(id),{method:'PUT',body:JSON.stringify({customUrl:v})});note('Пользовательский домен сохранён');loadDeployments()}catch(e){note(e.message)}}async function checkDeployment(id){try{const d=await api('/api/admin/deployment/check?id='+encodeURIComponent(id),{method:'POST'});note(d.ok?'Проверка работоспособности пройдена; прокси пока не добавлен в пул (нужна проверка фактической пересылки)':'Не удалось проверить узел: '+(d.deployment?.lastError||'unknown'));loadDeployments()}catch(e){note(e.message)}}async function loadProxyPool(){try{const d=await api('/api/admin/proxy-pool'),a=d.proxies||[];$('proxyTotal').textContent=a.length;$('proxyCooling').textContent=a.filter(x=>x.cooldownUntil&&new Date(x.cooldownUntil)>new Date()).length;$('proxyRows').innerHTML=a.map(x=>`<tr><td><code>${esc(x.url)}</code></td><td>${x.health==='reachable'?'Прокси доступен':(x.health==='upstream_error'?'Прокси доступен (ошибка вышестоящего сервиса)':(x.health==='unreachable'?'Недоступен':(x.cooldownUntil&&new Date(x.cooldownUntil)>new Date()?'Охлаждение':'Не проверен')))}</td><td>${x.latencyMs?x.latencyMs+' ms':'—'}</td><td>${x.failures||0}</td><td class="muted">${x.cooldownUntil&&new Date(x.cooldownUntil)>new Date()?new Date(x.cooldownUntil).toLocaleString():'Доступен'}</td><td><button class="btn danger" onclick="removeProxyPage(${JSON.stringify(x.url)})">Удалить</button></td></tr>`).join('')||'<tr><td colspan="4" class="empty">Прокси пока нет</td></tr>'}catch(e){note(e.message)}}async function addProxySinglePage(){const v=$('proxySingleInput').value.trim();if(!v)return note('Введите адрес прокси');try{await api('/api/admin/proxy-pool',{method:'POST',body:JSON.stringify({url:v})});$('proxySingleInput').value='';note('Прокси добавлен и уже активен');loadProxyPool()}catch(e){note(e.message)}}async function addProxyBatchPage(){const v=$('proxyBatchInput').value.trim();if(!v)return note('Введите список прокси');try{await api('/api/admin/proxy-pool',{method:'POST',body:JSON.stringify({urls:[v]})});$('proxyBatchInput').value='';note('Прокси добавлены и уже активны');loadProxyPool()}catch(e){note(e.message)}}async function removeProxyPage(v){try{await api('/api/admin/proxy-pool?url='+encodeURIComponent(v),{method:'DELETE'});note('Прокси удалён');loadProxyPool()}catch(e){note(e.message)}}async function clearProxyPoolPage(){if(!confirm('Очистить пул прокси и переключиться на прямое подключение?'))return;try{await api('/api/admin/proxy-pool',{method:'DELETE'});note('Пул прокси очищен');loadProxyPool()}catch(e){note(e.message)}}
+const settingFields=[['maxToolCallsPerTurn','Максимум вызовов инструментов за ход','number',false],['maxToolRounds','Максимум раундов инструментов','number',false],['contextWindow','Контекстное окно','number',false],['maxOutputTokens','Максимум выходных токенов','number',false],['chatTimeoutSeconds','Тайм-аут чата (сек.)','number',false],['imageTimeoutSeconds','Тайм-аут изображений (сек.)','number',false],['logLevel','Уровень журнала','select',false],['debugLogPath','Путь к журналу отладки','text',true],['listenAddress','Адрес прослушивания','text',true],['configPath','Путь к конфигурации аккаунтов','text',true],['tokenCachePath','Путь к кэшу токенов','text',true],['sessionCachePath','Путь к кэшу сеансов','text',true],['outboundProxy','Совместимый одиночный прокси (SOCKS5 / HTTP / HTTPS)','text',true],['proxyPool','Пул прокси (по одному в строке, поддерживается массовая вставка)','textarea',true],['clientId','OAuth Client ID','text',true],['authority','OAuth Authority','text',true],['redirectUri','Адрес перенаправления OAuth','text',true],['scope','OAuth Scope','text',true]];let codexModels=[],upstreamTones=[];
+function ensureModelMappingsSection(){let section=$('modelMappingsSection');if(section)return section;section=document.createElement('div');section.id='modelMappingsSection';section.innerHTML='<div class="model-mapping-head"><label for="modelMappings">Сопоставления моделей</label><button class="btn" type="button" onclick="addModelMapping()">Добавить сопоставление</button></div><div id="modelMappings" class="model-mapping-list"></div><datalist id="codexModels"></datalist>';$('settingsForm').before(section);return section}
+function modelMappingRow(mapping={publicModel:'',upstreamTone:'Gpt_5_6_Reasoning',defaultReasoningLevel:'medium'}){const toneOptions=upstreamTones.map(t=>`<option value="${esc(t)}" ${mapping.upstreamTone===t?'selected':''}>${esc(t)}</option>`).join('');return `<div class="model-mapping-row"><label>Публичный ID модели<input class="input model-mapping-input" data-key="publicModel" list="codexModels" value="${esc(mapping.publicModel||'')}"></label><label>Стандартный режим рассуждений<select class="input model-mapping-input" data-key="defaultReasoningLevel">${['none','minimal','low','medium','high','xhigh'].map(e=>`<option value="${e}" ${mapping.defaultReasoningLevel===e?'selected':''}>${e}</option>`).join('')}</select></label><label>Upstream tone<select class="input model-mapping-input" data-key="upstreamTone">${toneOptions}</select></label><button class="btn danger model-mapping-remove" type="button" title="Удалить сопоставление" aria-label="Удалить сопоставление" onclick="this.closest('.model-mapping-row').remove()">×</button></div>`}
+function renderModelMappings(mappings){ensureModelMappingsSection();$('codexModels').innerHTML=codexModels.map(m=>`<option value="${esc(m)}"></option>`).join('');$('modelMappings').innerHTML=(mappings||[]).map(modelMappingRow).join('')}
+function addModelMapping(){$('modelMappings').insertAdjacentHTML('beforeend',modelMappingRow())}
+function readModelMappings(){return [...document.querySelectorAll('.model-mapping-row')].map(row=>{const value=k=>row.querySelector(`[data-key="${k}"]`).value.trim();const publicModel=value('publicModel');return {publicModel,upstreamTone:value('upstreamTone'),displayName:publicModel,defaultReasoningLevel:value('defaultReasoningLevel')}})}
+async function loadSettings(){try{const d=await api('/api/admin/settings');const v=d.settings||{};codexModels=d.codexModels||[];upstreamTones=d.upstreamTones||[];$('settingsForm').innerHTML=settingFields.map(([k,l,t,restart])=>`<div class="form-row"><label>${l}${restart?' <span class="muted">（требуется перезапуск）</span>':''}</label>${t==='select'?`<select class="input setting-input" data-key="${k}"><option value="silent" ${v[k]==='silent'?'selected':''}>Без вывода</option><option value="error" ${v[k]==='error'?'selected':''}>Ошибка</option><option value="warn" ${v[k]==='warn'?'selected':''}>Предупреждение</option><option value="info" ${v[k]==='info'?'selected':''}>Информация</option><option value="debug" ${v[k]==='debug'?'selected':''}>Отладка</option></select>`:t==='textarea'?`<textarea class="input setting-input" data-key="${k}" id="proxyPoolInput" rows="5" placeholder="socks5://user:pass@host:1080&#10;http://host:8080">${esc((v[k]||[]).join('\\n'))}</textarea><div class="actions" style="margin-top:8px"><button class="btn" type="button" onclick="addSingleProxy()">Добавить один прокси</button><button class="btn" type="button" onclick="clearProxyPool()">Очистить пул прокси</button></div>`:`<input class="input setting-input" data-key="${k}" type="${t}" value="${esc(v[k]??'')}">`}</div>`).join('');renderModelMappings(v.modelMappings)}catch(e){note(e.message)}}
+async function addSingleProxy(){const v=prompt('ВводАдрес прокси（socks5/http/https）');if(!v||!v.trim())return;try{const d=await api('/api/admin/proxy-pool',{method:'POST',body:JSON.stringify({url:v.trim()})});$('proxyPoolInput').value=(d.proxies||[]).map(x=>x.url).join('\n');note('Прокси добавлен и уже активен')}catch(e){note(e.message)}}async function clearProxyPool(){if(!confirm('Очистить пул прокси и немедленно переключиться на прямое подключение?'))return;try{await api('/api/admin/proxy-pool',{method:'DELETE'});$('proxyPoolInput').value='';note('Пул прокси очищен')}catch(e){note(e.message)}}async function saveSettings(){try{const v={modelMappings:readModelMappings()};document.querySelectorAll('.setting-input').forEach(x=>v[x.dataset.key]=x.dataset.key==='proxyPool'?x.value.split(/[\n,]/).map(s=>s.trim()).filter(Boolean):x.type==='number'?Number(x.value):x.value);await api('/api/admin/settings',{method:'PUT',body:JSON.stringify(v)});note('Настройки сохранены; изменения, требующие перезапуска, применятся после перезапуска сервиса')}catch(e){note(e.message)}}
+</script></body></html>
